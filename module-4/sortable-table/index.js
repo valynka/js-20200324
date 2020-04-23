@@ -72,8 +72,8 @@ getHeaderSortingArrow(sortable){
   getSubElements(element){
     const elements = element.querySelectorAll('[data-elem]');
     return [...elements].reduce((accum, subElement) => {
-      accum[subElement.dataset.element] = subElement;
-            return accum;
+      accum[subElement.dataset.elem] = subElement;
+          return accum;
     }, {});
   }
 
@@ -95,7 +95,7 @@ getHeaderSortingArrow(sortable){
     });
 
     currentColumn.dataset.order = order;
-
+    
     this.subElements.body.innerHTML = this.getTableBody(sortedData);
 
   }
@@ -106,7 +106,15 @@ getHeaderSortingArrow(sortable){
     const {sortType, customSorting} = column;
     const direction = order === 'asc' ? 1 : -1;
 
-    switch(sortType)
+    return arrData.sort((a, b) => {
+      switch(sortType){
+        case 'number': return direction * (a[field] - b[field]);
+        case 'string': return direction * a[field].localeCompare(b[field], 'ru');
+        case 'custom': return direction * customSorting(a,b);
+        default: return direction * (a[field] - b[field]);
+      }
+    })
+    
   }
 
   remove() {
