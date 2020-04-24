@@ -97,7 +97,7 @@ export default class SortableTable {
 
     currentColumn.dataset.order = order;
     
-    this.subElements.body.innerHTML = this.getTableBody(sortedData);
+    this.subElements.body.innerHTML = sortedData.map(item => this.getTableRow(item)).join('')
  }
 
   sortData(field, order){
