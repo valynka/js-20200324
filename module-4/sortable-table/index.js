@@ -14,22 +14,22 @@ export default class SortableTable {
   }
 
   getHeaderCell({id, title, sortable}){
-    return `<div class="sortable-table__cell" data-name="${id}">
+    return `<div class="sortable-table__cell" data-id="${id}">
                 <span>${title}</span>
                   ${this.getHeaderSortingArrow(sortable)}             
             </div>
           `       
   }
-getHeaderSortingArrow(sortable){
-  if(sortable){
-    return ` 
-      <span class="sortable-table__sort-arrow">
-          <span class="sort-arrow"></span>
-        </span>
-    `
+  getHeaderSortingArrow(sortable){
+    if(sortable){
+      return ` 
+        <span class="sortable-table__sort-arrow">
+            <span class="sort-arrow"></span>
+          </span>
+      `
+    }
+    else return '';
   }
-  else return '';
-}
 
 
   getTableHeader(){
@@ -86,19 +86,19 @@ getHeaderSortingArrow(sortable){
 
   sort (field, order) {
     const sortedData = this.sortData(field, order);
-    const allColumns = this.element.querySelectorAll(`.sortable-table__cell[data-name]`);
-    const currentColumn = this.element.querySelector(`.sortable-table__cell[data-name="${field}"]`);
+    const allColumns = this.element.querySelectorAll(`.sortable-table__cell[data-id]`);
+    const currentColumn = this.element.querySelector(`.sortable-table__cell[data-id="${field}"]`);
 
     // Remove sorting arrow from other columns
     allColumns.forEach(column => {
+      if(column.dataset.id !== 'images')
       column.dataset.order = '';
     });
 
     currentColumn.dataset.order = order;
     
     this.subElements.body.innerHTML = this.getTableBody(sortedData);
-
-  }
+ }
 
   sortData(field, order){
     const arrData = [...this.data];
