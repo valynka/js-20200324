@@ -21,14 +21,12 @@ export default class SortableTable {
           `       
   }
   getHeaderSortingArrow(sortable){
-    if(sortable){
-      return ` 
+    return sortable ? ` 
         <span class="sortable-table__sort-arrow">
             <span class="sort-arrow"></span>
           </span>
-      `
-    }
-    else return '';
+      ` : 
+     '';
   }
 
 
@@ -97,7 +95,7 @@ export default class SortableTable {
 
     currentColumn.dataset.order = order;
     
-    this.subElements.body.innerHTML = sortedData.map(item => this.getTableRow(item)).join('')
+    this.subElements.body.innerHTML = sortedData.map(item => this.getTableRow(item)).join('');
  }
 
   sortData(field, order){

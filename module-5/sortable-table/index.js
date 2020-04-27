@@ -4,6 +4,17 @@ export default class SortableTable {
   headersConfig = [];
   data = [];
 
+  onSortClick = (event) => {
+    const clickedColumn = event.target.closest('[data-sortable="true"]');
+    this.sorted.id = clickedColumn.dataset.id;
+    if(!clickedColumn.dataset.order){
+      this.sorted.order = 'asc';
+    }
+    else this.sorted.order = clickedColumn.dataset.order === 'asc' ? 'desc' : 'asc';
+    this.sort(this.sorted);
+     
+  }
+
   constructor(headersConfig, {
     data = [],
     sorted = {
@@ -16,24 +27,23 @@ export default class SortableTable {
     this.sorted = sorted;
 
     this.render();
+    this.sort(this.sorted);
   }
 
   getHeaderCell({id, title, sortable}){
-    return `<div class="sortable-table__cell" data-id="${id}">
+    return `<div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
                 <span>${title}</span>
                   ${this.getHeaderSortingArrow(sortable)}             
             </div>
           `       
   }
   getHeaderSortingArrow(sortable){
-    if(sortable){
-      return ` 
+    return sortable ? ` 
         <span class="sortable-table__sort-arrow">
             <span class="sort-arrow"></span>
           </span>
-      `
-    }
-    else return '';
+      ` : 
+     '';
   }
 
 
@@ -90,19 +100,15 @@ export default class SortableTable {
     this.initEventListeners();
   }
 
-  getSortConfig = (event) => {
-    const clickedColumn = event.target.closest('[data-sortable="true"]');
-
-  }
 
   initEventListeners () {
-    this.subElements.header.addEventListener('click', this.getSortConfig);
+    this.subElements.header.addEventListener('click', this.onSortClick);
   }
 
-  sort (field, order) {
-    const sortedData = this.sortData(field, order);
+  sort ({id, order}) {
+    const sortedData = this.sortData(id, order);
     const allColumns = this.element.querySelectorAll(`.sortable-table__cell[data-id]`);
-    const currentColumn = this.element.querySelector(`.sortable-table__cell[data-id="${field}"]`);
+    const currentColumn = this.element.querySelector(`.sortable-table__cell[data-id="${id}"]`);
 
     // Remove sorting arrow from other columns
     allColumns.forEach(column => {
@@ -112,21 +118,21 @@ export default class SortableTable {
 
     currentColumn.dataset.order = order;
     
-    this.subElements.body.innerHTML = this.getTableBody(sortedData);
+    this.subElements.body.innerHTML = sortedData.map(item => this.getTableRow(item)).join('');
  }
 
-  sortData(field, order){
+  sortData(id, order){
     const arrData = [...this.data];
-    const column = this.headersConfig.find(item => item.id === field);
+    const column = this.headersConfig.find(item => item.id === id);
     const {sortType, customSorting} = column;
     const direction = order === 'asc' ? 1 : -1;
 
     return arrData.sort((a, b) => {
       switch(sortType){
-        case 'number': return direction * (a[field] - b[field]);
-        case 'string': return direction * a[field].localeCompare(b[field], 'ru');
+        case 'number': return direction * (a[id] - b[id]);
+        case 'string': return direction * a[id].localeCompare(b[id], 'ru');
         case 'custom': return direction * customSorting(a,b);
-        default: return direction * (a[field] - b[field]);
+        default: return direction * (a[id] - b[id]);
       }
     })    
   }
