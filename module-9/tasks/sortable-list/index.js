@@ -32,8 +32,8 @@ export default class SortableList {
   	
   	this.dragging.classList.remove('sortable-list__item_dragging');
   	this.dragging.style = '';
-  	document.removeEventListener('mousemove', this.onPointerMove);
-  	document.removeEventListener('mouseup', this.onPointerUp);
+  	document.removeEventListener('pointermove', this.onPointerMove);
+  	document.removeEventListener('pointerup', this.onPointerUp);
 
   	this.dragging = null;
 
@@ -71,7 +71,7 @@ export default class SortableList {
   }
 
   initEventListeners(){
-  	this.element.addEventListener('mousedown', this.onPointerDown);  	
+  	this.element.addEventListener('pointerdown', this.onPointerDown);  	
   }
 
   moveAt(clientX, clientY) {
@@ -98,8 +98,8 @@ export default class SortableList {
   	this.moveAt(clientX, clientY);
   	
 
-  	document.addEventListener('mousemove', this.onPointerMove);
-  	document.addEventListener('mouseup', this.onPointerUp);
+  	document.addEventListener('pointermove', this.onPointerMove);
+  	document.addEventListener('pointerup', this.onPointerUp);
   }  
 
   movePlaceholder(clientX, clientY){
