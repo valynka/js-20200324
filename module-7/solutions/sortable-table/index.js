@@ -1,4 +1,4 @@
-import fetchJson from "../../utils/fetch-json.js";
+import fetchJson from "./utils/fetch-json.js";
 
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
@@ -73,7 +73,7 @@ export default class SortableTable {
     this.url.searchParams.set('_order', order);
     this.url.searchParams.set('_start', 0);
     this.url.searchParams.set('_end', this.pageSize);
-
+    
     this.element.classList.add('sortable-table_loading');
 
     const data = await fetchJson(this.url);
@@ -129,17 +129,19 @@ export default class SortableTable {
         ${this.getTableRow(item, data)}
       </div>`
     ).join('');
-  }
+ }
 
   getTableRow (item) {
-    const cells = this.headersConfig.map(({id, template}) => {
+     const cells = this.headersConfig.map(({id, template}) => {
       return {
         id,
         template
       }
     });
 
+       
     return cells.map(({id, template}) => {
+         
       return template
         ? template(item[id])
         : `<div class="sortable-table__cell">${item[id]}</div>`
