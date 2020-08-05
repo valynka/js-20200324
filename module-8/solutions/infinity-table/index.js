@@ -8,8 +8,7 @@ export default class InfinityTable {
   end = 21;
 
   onWindowScroll = () => {
-    const { bottom } = this.element.getBoundingClientRect();
-
+    const { bottom } = this.element.getBoundingClientRect();    
     if (bottom < document.documentElement.clientHeight && !this.loading) {
       this.start = this.end;
       this.end = this.start + this.step;

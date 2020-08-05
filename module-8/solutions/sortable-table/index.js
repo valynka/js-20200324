@@ -1,4 +1,4 @@
-import fetchJson from "../../utils/fetch-json.js";
+import fetchJson from "./utils/fetch-json.js";
 
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
@@ -13,8 +13,9 @@ export default class SortableTable {
 
   onWindowScroll = async () => {
     const { bottom } = this.element.getBoundingClientRect();
-    const { id, order } = this.sorted;
 
+    const { id, order } = this.sorted;
+       
     if (bottom < document.documentElement.clientHeight && !this.loading) {
       this.start = this.end;
       this.end = this.start + this.step;

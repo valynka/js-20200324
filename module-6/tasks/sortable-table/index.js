@@ -9,12 +9,13 @@ export default class SortableTable {
   pageSize = 30;
 
   onSortClick = event => {
+    let {id, order} = this.sorted;
     const clickedColumn = event.target.closest('[data-sortable="true"]');
-    this.sorted.id = clickedColumn.dataset.id;
+    id = clickedColumn.dataset.id;
     if(!clickedColumn.dataset.order){
-      this.sorted.order = 'asc';
+      order = 'asc';
     }
-    else this.sorted.order = clickedColumn.dataset.order === 'asc' ? 'desc' : 'asc';
+    else order = clickedColumn.dataset.order === 'asc' ? 'desc' : 'asc';
 
     this.subElements.arrow.remove();
     clickedColumn.append(this.subElements.arrow);
@@ -26,12 +27,15 @@ export default class SortableTable {
       if(column.dataset.id !== 'images')
       column.dataset.order = '';    
     });    
-    clickedColumn.dataset.order = this.sorted.order;
+    clickedColumn.dataset.order = order;
 
     if(this.isSortLocally){
-      this.sortLocally(this.sorted);
+      this.sortLocally(id, order);
     } 
-    else this.sortOnServer(this.sorted);
+    else this.sortOnServer(id, order);
+
+    this.sorted = {id, order};
+    
   };
 
   constructor(headersConfig = [], {
@@ -166,13 +170,13 @@ export default class SortableTable {
     this.subElements.header.addEventListener('pointerdown', this.onSortClick);
   }
 
-  sortLocally({id, order}){
+  sortLocally(id, order){
     const sortedData = this.sortData(id, order);
        
     this.subElements.body.innerHTML = this.getTableRows(sortedData);
   }
 
-  async sortOnServer({id, order}){
+  async sortOnServer(id, order){
    const data = await this.loadData(id, order);
 
     this.renderRows(data);
